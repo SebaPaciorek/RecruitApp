@@ -7,12 +7,10 @@
 
     <LinearLayout
         android:id="@+id/topLayoutTodoList"
-        android:layout_width="wrap_content"
+        android:layout_width="163dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="86dp"
-        android:layout_marginTop="37dp"
+        android:layout_below="@+id/todoCheckBoxTodoList"
+        android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingBottom="5dip"
@@ -44,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="UserID"
+                    android:text="@string/userId_text_view"
                     android:textColor="#000000"
                     android:textSize="14sp" />
 
@@ -67,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="todo id"
+                    android:text="@string/id_text_view"
                     android:textColor="#000000"
                     android:textSize="14sp" />
 
@@ -111,14 +109,14 @@
         android:visibility="gone" />
 
     <CheckBox
-        android:id="@+id/titleTodoList"
+        android:id="@+id/todoCheckBoxTodoList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:checked="false"
-        android:text="Title" />
+        android:text="@string/title_text_view" />
 
 </RelativeLayout>
 
