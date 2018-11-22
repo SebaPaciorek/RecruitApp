@@ -6,6 +6,6 @@ public interface TodoListInterface {
     }
 
     interface Presenter {
-
+        void getTodos();
     }
 }
