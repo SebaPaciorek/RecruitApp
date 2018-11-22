@@ -1,11 +1,14 @@
 package recruit.recruitapp.presenter.todos;
 
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -46,11 +49,19 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         return todoList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView userId;
         public TextView id;
         public CheckBox todoCheckBox;
+        public ImageView editImageView;
+        public ImageView removeImageView;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +69,44 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             userId = itemView.findViewById(R.id.userIdTodoList);
             id = itemView.findViewById(R.id.idTodoList);
             todoCheckBox = itemView.findViewById(R.id.todoCheckBoxTodoList);
+            editImageView = itemView.findViewById(R.id.editTodoImageView);
+            removeImageView = itemView.findViewById(R.id.removeTodoImageView);
+
+            setOnCheckBoxListener();
+            setOnEditListener();
+            setOnRemoveListener();
+        }
+
+        void setOnCheckBoxListener() {
+            todoCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+
+        void setOnEditListener() {
+            editImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+
+        void setOnRemoveListener() {
+            removeImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 }

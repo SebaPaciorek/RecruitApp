@@ -72,7 +72,6 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                             createTodoObject(todoJsonObject);
                         }
                     }
-
                 }
             }
 
@@ -96,10 +95,8 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                 TodoList todoList = listOfTodoList.get(0);
 
                 for (int i = 0; i < todoList.getTodoRealmList().size(); i++) {
-                    Log.d("LOG", todoList.getTodoRealmList().get(i).getTitle());
                     todoArrayList.add(todoList.getTodoRealmList().get(i));
                 }
-
             }
         });
 
