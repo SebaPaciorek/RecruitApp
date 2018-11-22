@@ -3,4 +3,5 @@
     <string name="userId_text_view">1</string>
     <string name="id_text_view">1</string>
     <string name="title_text_view">title</string>
+    <string name="first_launch_shared_preferences">true</string>
 </resources>
