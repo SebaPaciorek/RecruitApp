@@ -35,8 +35,8 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     public void onBindViewHolder(@NonNull TodoRecyclerViewAdapter.ViewHolder viewHolder, int i) {
         final Todo todo = todoList.get(i);
 
-        holder.userId.setText(todo.getUserId());
-        holder.id.setText(todo.getId());
+        holder.userId.setText(String.valueOf(todo.getUserId()));
+        holder.id.setText(String.valueOf(todo.getId()));
         holder.todoCheckBox.setChecked(todo.isCompleted());
         holder.todoCheckBox.setText(todo.getTitle());
     }
