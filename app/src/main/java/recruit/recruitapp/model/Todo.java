@@ -1,6 +1,8 @@
 package recruit.recruitapp.model;
 
-public class Todo {
+import io.realm.RealmObject;
+
+public class Todo extends RealmObject {
     private int userId;
     private int id;
     private String title;
