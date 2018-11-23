@@ -11,10 +11,12 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import recruit.recruitapp.R;
 import recruit.recruitapp.contract.todos.TodoListInterface;
 import recruit.recruitapp.model.Todo;
 import recruit.recruitapp.model.TodoList;
 import recruit.recruitapp.service.TodoService;
+import recruit.recruitapp.view.todos.TodoFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +32,8 @@ public class TodoPresenter implements TodoListInterface.Presenter {
     private static TodoPresenter todoPresenter;
 
     private Realm realm;
-    private TodoList todoList;
+    public static TodoList todoList;
+    private List<Todo> todoListArrayList;
 
     public TodoPresenter() {
     }
@@ -71,7 +74,10 @@ public class TodoPresenter implements TodoListInterface.Presenter {
 
                             createTodoObject(todoJsonObject);
                         }
+
                     }
+                    TodoFragment.getInstance().showTodosFirstLaunch(todoListArrayList);
+                    TodoFragment.getInstance().setFirstLaunchSharedPreferences("false");
                 }
             }
 
@@ -92,7 +98,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             @Override
             public void execute(Realm realm) {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
-                TodoList todoList = listOfTodoList.get(0);
+                todoList = listOfTodoList.get(0);
 
                 for (int i = 0; i < todoList.getTodoRealmList().size(); i++) {
                     todoArrayList.add(todoList.getTodoRealmList().get(i));
@@ -101,6 +107,38 @@ public class TodoPresenter implements TodoListInterface.Presenter {
         });
 
         return todoArrayList;
+    }
+
+    @Override
+    public List<Todo> getTodoListFirstLaunch() {
+
+        return todoListArrayList;
+    }
+
+    @Override
+    public void removeTodo(int userId, int id) {
+        getTodoList();
+        realm = Realm.getDefaultInstance();
+
+        todoList.getTodoRealmList().getRealm().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Todo todoToRemove = realm.where(Todo.class).equalTo("userId", userId).equalTo("id", id).findFirst();
+                if (todoToRemove != null) {
+
+                    todoToRemove.deleteFromRealm();
+
+                    TodoFragment.getInstance().showProgressBar(false);
+                    TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.message_remove_success));
+
+                } else {
+                    TodoFragment.getInstance().showProgressBar(false);
+                    TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.message_remove_failed));
+                }
+            }
+
+        });
+        TodoFragment.getInstance().itemRemoved(0);
     }
 
     private void createTodoObject(JsonObject todoJsonObject) {
@@ -123,12 +161,14 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             @Override
             public void execute(Realm realm) {
                 todoList = realm.createObject(TodoList.class);
+                todoListArrayList = new ArrayList<>();
             }
         });
     }
 
     private void addToTodoList(Todo todo) {
         todoList.getTodoRealmList().add(todo);
+        todoListArrayList.add(todo);
     }
 
     //ensure singleton

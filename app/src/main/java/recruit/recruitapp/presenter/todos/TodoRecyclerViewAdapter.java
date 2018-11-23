@@ -1,7 +1,9 @@
 package recruit.recruitapp.presenter.todos;
 
+import android.content.DialogInterface;
 import android.media.Image;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,8 @@ import java.util.List;
 
 import recruit.recruitapp.R;
 import recruit.recruitapp.model.Todo;
+import recruit.recruitapp.view.MainActivity;
+import recruit.recruitapp.view.todos.TodoFragment;
 
 public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerViewAdapter.ViewHolder> {
 
@@ -46,7 +50,10 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
     @Override
     public int getItemCount() {
-        return todoList.size();
+        if (todoList != null) {
+            return todoList.size();
+        }
+        return 0;
     }
 
     @Override
@@ -99,7 +106,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             removeImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    TodoFragment.getInstance().showAlertDialogRemove(Integer.valueOf(userId.getText().toString()), Integer.valueOf(id.getText().toString()));
                 }
             });
         }
