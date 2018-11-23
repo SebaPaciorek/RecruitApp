@@ -88,7 +88,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             todoCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    TodoPresenter.getInstance().updateTodoCompleted(Integer.valueOf(userId.getText().toString()), Integer.valueOf(id.getText().toString()), todoCheckBox.isChecked());
                 }
             });
         }

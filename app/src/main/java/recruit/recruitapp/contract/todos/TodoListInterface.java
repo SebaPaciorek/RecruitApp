@@ -35,5 +35,7 @@ public interface TodoListInterface {
         void removeTodo(int userId, int id, int position);
 
         void editTodo(int userId, int id, int position, String title);
+
+        void updateTodoCompleted(int userId, int id, boolean completed);
     }
 }

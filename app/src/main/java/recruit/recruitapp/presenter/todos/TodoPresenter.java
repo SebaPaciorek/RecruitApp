@@ -184,6 +184,22 @@ public class TodoPresenter implements TodoListInterface.Presenter {
         TodoFragment.getInstance().itemRemoved(position);
     }
 
+    @Override
+    public void updateTodoCompleted(int userId, int id, boolean completed) {
+        getTodoList();
+        realm = Realm.getDefaultInstance();
+
+        todoList.getTodoRealmList().getRealm().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Todo todoToUpdate = realm.where(Todo.class).equalTo("userId", userId).equalTo("id", id).findFirst();
+                if (todoToUpdate != null){
+                    todoToUpdate.setCompleted(completed);
+                }
+            }
+        });
+    }
+
     private void createTodoObject(JsonObject todoJsonObject) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
