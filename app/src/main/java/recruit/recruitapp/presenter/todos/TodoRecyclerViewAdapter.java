@@ -97,7 +97,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             editImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    TodoFragment.getInstance().showAlertDialogEdit(Integer.valueOf(userId.getText().toString()), Integer.valueOf(id.getText().toString()), getItemViewType(), todoCheckBox.getText().toString());
                 }
             });
         }
@@ -106,7 +106,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             removeImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TodoFragment.getInstance().showAlertDialogRemove(Integer.valueOf(userId.getText().toString()), Integer.valueOf(id.getText().toString()));
+                    TodoFragment.getInstance().showAlertDialogRemove(Integer.valueOf(userId.getText().toString()), Integer.valueOf(id.getText().toString()), getItemViewType());
                 }
             });
         }

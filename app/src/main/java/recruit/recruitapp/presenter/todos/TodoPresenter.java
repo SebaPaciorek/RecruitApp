@@ -116,7 +116,26 @@ public class TodoPresenter implements TodoListInterface.Presenter {
     }
 
     @Override
-    public void removeTodo(int userId, int id) {
+    public void editTodo(int userId, int id, int position, String title) {
+        getTodoList();
+        realm = Realm.getDefaultInstance();
+
+        todoList.getTodoRealmList().getRealm().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Todo todoToEdit = realm.where(Todo.class).equalTo("userId", userId).equalTo("id", id).findFirst();
+                if (todoToEdit != null) {
+                    todoToEdit.setTitle(title);
+                } else {
+                    TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.message_edit_failed));
+                }
+            }
+        });
+        TodoFragment.getInstance().itemEdited(position);
+    }
+
+    @Override
+    public void removeTodo(int userId, int id, int position) {
         getTodoList();
         realm = Realm.getDefaultInstance();
 
@@ -138,7 +157,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             }
 
         });
-        TodoFragment.getInstance().itemRemoved(0);
+        TodoFragment.getInstance().itemRemoved(position);
     }
 
     private void createTodoObject(JsonObject todoJsonObject) {

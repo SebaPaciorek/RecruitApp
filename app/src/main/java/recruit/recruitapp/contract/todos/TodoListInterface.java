@@ -3,15 +3,18 @@ package recruit.recruitapp.contract.todos;
 import java.util.List;
 
 import recruit.recruitapp.model.Todo;
-import recruit.recruitapp.model.TodoList;
 
 public interface TodoListInterface {
     interface View {
-        void showAlertDialogRemove(int userId, int id);
+        void showAlertDialogRemove(int userId, int id, int position);
+
+        void showAlertDialogEdit(int userId, int idTodo, int position, String title);
 
         void showProgressBar(boolean show);
 
         void itemRemoved(int position);
+
+        void itemEdited(int position);
 
         void showToast(String message);
 
@@ -27,6 +30,8 @@ public interface TodoListInterface {
 
         List<Todo> getTodoListFirstLaunch();
 
-        void removeTodo(int userId, int id);
+        void removeTodo(int userId, int id, int position);
+
+        void editTodo(int userId, int id, int position, String title);
     }
 }

@@ -5,8 +5,12 @@
     <string name="title_text_view">title</string>
     <string name="first_launch_shared_preferences">true</string>
     <string name="alert_dialog_remove">Czy na pewno usunąć?</string>
-    <string name="alert_dialog_positive_button">Tak</string>
-    <string name="alert_dialog_negative_button">Nie</string>
+    <string name="alert_dialog_remove_positive_button">Tak</string>
+    <string name="alert_dialog_remove_negative_button">Nie</string>
     <string name="message_remove_success">Poprawnie usunięto</string>
     <string name="message_remove_failed">Wystąpił nieoczekiwany błąd podczas usuwania</string>
+    <string name="alert_dialog_edit">Wpisz tytuł</string>
+    <string name="alert_dialog_edit_positive_button">Zatwierdź</string>
+    <string name="alert_dialog_edit_negative_button">Anuluj</string>
+    <string name="message_edit_failed">Wystąpił nieoczekiwany błąd podczas edytowania</string>
 </resources>

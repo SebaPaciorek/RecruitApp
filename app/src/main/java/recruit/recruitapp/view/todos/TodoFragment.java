@@ -11,20 +11,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import recruit.recruitapp.R;
 import recruit.recruitapp.contract.todos.TodoListInterface;
 import recruit.recruitapp.model.Todo;
-import recruit.recruitapp.model.TodoList;
 import recruit.recruitapp.presenter.todos.TodoPresenter;
 import recruit.recruitapp.presenter.todos.TodoRecyclerViewAdapter;
 import recruit.recruitapp.view.MainActivity;
@@ -41,6 +39,7 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
 
     private TodoRecyclerViewAdapter todoRecyclerViewAdapter;
     private ProgressBar progressBar;
+
 
     private static TodoFragment todoFragment;
 
@@ -63,6 +62,7 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
         progressBar = view.findViewById(R.id.progressBar);
 
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
+
         setLayoutManager();
         setDividerItemDecoration();
 
@@ -109,22 +109,24 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
     }
 
     @Override
-    public void showAlertDialogRemove(int userId, int idTodo) {
+    public void showAlertDialogEdit(int userId, int idTodo, int position, String title) {
+        EditText editText = new EditText(getActivity());
+        editText.setText(title);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
-        builder.setMessage(R.string.alert_dialog_remove);
+        builder.setMessage(R.string.alert_dialog_edit);
         builder.setCancelable(true);
+        builder.setView(editText);
 
         builder.setPositiveButton(
-                R.string.alert_dialog_positive_button,
+                R.string.alert_dialog_edit_positive_button,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        todoPresenter.removeTodo(userId, idTodo);
-                        showProgressBar(true);
+                        todoPresenter.editTodo(userId, idTodo, position, editText.getText().toString());
                     }
                 });
 
         builder.setNegativeButton(
-                R.string.alert_dialog_negative_button,
+                R.string.alert_dialog_edit_negative_button,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -133,6 +135,41 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void showAlertDialogRemove(int userId, int idTodo, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+        builder.setMessage(R.string.alert_dialog_remove);
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                R.string.alert_dialog_remove_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        todoPresenter.removeTodo(userId, idTodo, position);
+                        showProgressBar(true);
+                    }
+                });
+
+        builder.setNegativeButton(
+                R.string.alert_dialog_remove_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void itemEdited(int position) {
+        todoList = todoPresenter.getTodoList();
+        todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+        todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+        todoRecyclerViewAdapter.notifyItemChanged(position);
     }
 
     @Override
