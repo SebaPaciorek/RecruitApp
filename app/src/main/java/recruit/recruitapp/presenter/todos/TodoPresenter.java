@@ -135,6 +135,10 @@ public class TodoPresenter implements TodoListInterface.Presenter {
         TodoFragment.getInstance().itemEdited(position);
     }
 
+    /*
+    by requirements userId is always 1
+    new object is always added on end of list
+     */
     public void insertTodo(String title) {
         realm = Realm.getDefaultInstance();
 
@@ -193,7 +197,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             @Override
             public void execute(Realm realm) {
                 Todo todoToUpdate = realm.where(Todo.class).equalTo("userId", userId).equalTo("id", id).findFirst();
-                if (todoToUpdate != null){
+                if (todoToUpdate != null) {
                     todoToUpdate.setCompleted(completed);
                 }
             }
