@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 
 import recruit.recruitapp.R;
 import recruit.recruitapp.view.todos.TodoFragment;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.todoFragmentContainer, todoFragment).commit();
     }
 
-    public static MainActivity getInstance(){
+    public static MainActivity getInstance() {
         return mainActivity;
     }
 }

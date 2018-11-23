@@ -3,6 +3,7 @@
     <string name="userId_text_view">1</string>
     <string name="id_text_view">1</string>
     <string name="title_text_view">title</string>
+    <string name="title_button_new_todo">Nowy</string>
     <string name="first_launch_shared_preferences">true</string>
     <string name="alert_dialog_remove">Czy na pewno usunąć?</string>
     <string name="alert_dialog_remove_positive_button">Tak</string>
@@ -13,4 +14,7 @@
     <string name="alert_dialog_edit_positive_button">Zatwierdź</string>
     <string name="alert_dialog_edit_negative_button">Anuluj</string>
     <string name="message_edit_failed">Wystąpił nieoczekiwany błąd podczas edytowania</string>
+    <string name="alert_dialog_insert">Wpisz tytuł</string>
+    <string name="alert_dialog_insert_positive_button">Utwórz</string>
+    <string name="alert_dialog_insert_negative_button">Anuluj</string>
 </resources>

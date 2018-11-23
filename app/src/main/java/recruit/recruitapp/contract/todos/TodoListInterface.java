@@ -12,6 +12,8 @@ public interface TodoListInterface {
 
         void showProgressBar(boolean show);
 
+        void itemInserted(int position);
+
         void itemRemoved(int position);
 
         void itemEdited(int position);

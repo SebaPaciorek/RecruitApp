@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -134,6 +135,29 @@ public class TodoPresenter implements TodoListInterface.Presenter {
         TodoFragment.getInstance().itemEdited(position);
     }
 
+    public void insertTodo(String title) {
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int userId = 1;
+                int maxId = 0;
+                if (realm.where(Todo.class).equalTo("userId", userId).max("id") != null) {
+                    maxId = Objects.requireNonNull(realm.where(Todo.class).max("id")).intValue();
+                }
+                Todo todo = new Todo();
+                todo.setUserId(userId);
+                todo.setId(maxId + 1);
+                todo.setTitle(title);
+                todo.setCompleted(false);
+
+                addToTodoList(todo);
+            }
+        });
+        TodoFragment.getInstance().itemInserted(getTodoList().size());
+    }
+
     @Override
     public void removeTodo(int userId, int id, int position) {
         getTodoList();
@@ -187,7 +211,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
 
     private void addToTodoList(Todo todo) {
         todoList.getTodoRealmList().add(todo);
-        todoListArrayList.add(todo);
+        if (todoListArrayList != null) todoListArrayList.add(todo);
     }
 
     //ensure singleton

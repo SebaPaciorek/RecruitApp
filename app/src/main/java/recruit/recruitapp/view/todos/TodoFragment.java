@@ -11,9 +11,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,7 +29,7 @@ import recruit.recruitapp.presenter.todos.TodoPresenter;
 import recruit.recruitapp.presenter.todos.TodoRecyclerViewAdapter;
 import recruit.recruitapp.view.MainActivity;
 
-public class TodoFragment extends Fragment implements TodoListInterface.View {
+public class TodoFragment extends Fragment implements TodoListInterface.View, View.OnClickListener {
 
     private RecyclerView todoRecyclerView;
     private List<Todo> todoList;
@@ -40,9 +42,9 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
     private TodoRecyclerViewAdapter todoRecyclerViewAdapter;
     private ProgressBar progressBar;
 
+    private Button addNewTodoButton;
 
     private static TodoFragment todoFragment;
-
 
     public TodoFragment() {
         todoPresenter = TodoPresenter.getInstance();
@@ -62,6 +64,10 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
         progressBar = view.findViewById(R.id.progressBar);
 
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
+
+        addNewTodoButton = MainActivity.getInstance().findViewById(R.id.newTodoButton);
+
+        setOnAddNewTodoButton();
 
         setLayoutManager();
         setDividerItemDecoration();
@@ -106,6 +112,42 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(getString(R.string.first_launch_shared_preferences), firstLaunch);
         editor.apply();
+    }
+
+    private void setOnAddNewTodoButton() {
+        addNewTodoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAlertDialogInsert();
+            }
+        });
+    }
+
+    public void showAlertDialogInsert() {
+        EditText editText = new EditText(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+        builder.setMessage(R.string.alert_dialog_insert);
+        builder.setCancelable(true);
+        builder.setView(editText);
+
+        builder.setPositiveButton(
+                R.string.alert_dialog_insert_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        todoPresenter.insertTodo(editText.getText().toString());
+                    }
+                });
+
+        builder.setNegativeButton(
+                R.string.alert_dialog_insert_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -165,6 +207,15 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
     }
 
     @Override
+    public void itemInserted(int position) {
+        todoList = todoPresenter.getTodoList();
+        todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+        todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+        todoRecyclerView.scrollToPosition(position - 1);
+        todoRecyclerViewAdapter.notifyItemInserted(position);
+    }
+
+    @Override
     public void itemEdited(int position) {
         todoList = todoPresenter.getTodoList();
         todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
@@ -198,5 +249,10 @@ public class TodoFragment extends Fragment implements TodoListInterface.View {
 
     public static TodoFragment getInstance() {
         return todoFragment;
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
