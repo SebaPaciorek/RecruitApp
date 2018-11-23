@@ -7,5 +7,28 @@
         android:icon="@mipmap/ic_filter_foreground"
         android:title="Menu"
         android:visible="true"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/filter_all"
+                    android:icon="@mipmap/ic_filter_all_foreground"
+                    android:title="@string/title_filter_all" />
+
+                <item
+                    android:id="@+id/filter_finished"
+                    android:icon="@mipmap/ic_filter_finished_foreground"
+                    android:title="@string/title_filter_finished" />
+
+                <item
+                    android:id="@+id/filter_unfinished"
+                    android:icon="@mipmap/ic_filter_unfinished_foreground"
+                    android:title="@string/title_filter_unfinished" />
+            </group>
+
+        </menu>
+    </item>
+
+
+
 </menu>
