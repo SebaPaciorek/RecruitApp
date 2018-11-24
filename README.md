@@ -1,0 +1,9 @@
+If you want to start my app follow this instruction.
+
+1. Download my repository.
+2. Extract files.
+3. Launch your IDE e.g. Android Studio.
+4. Open my project in Android Studio. File-> Open and select my project.
+5. You can try this on emulator or real device. If you want on real device connect your device by USB to computer. 
+6. In Menu choose Run-> Run 'app' or by shortcut Shift + F10. Then choose your device and wait for building and allow to install permission on device.
+7. Enjoy!
