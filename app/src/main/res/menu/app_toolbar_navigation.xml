@@ -13,7 +13,8 @@
                 <item
                     android:id="@+id/filter_all"
                     android:icon="@mipmap/ic_filter_all_foreground"
-                    android:title="@string/title_filter_all" />
+                    android:title="@string/title_filter_all"
+                    android:checked="true"/>
 
                 <item
                     android:id="@+id/filter_finished"

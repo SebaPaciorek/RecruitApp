@@ -20,9 +20,15 @@ public interface TodoListInterface {
 
         void showToast(String message);
 
+        void showMessageRecyclerViewEmpty(boolean isEmpty);
+
         void setFirstLaunchSharedPreferences(String firstLaunch);
 
-        void showTodosFirstLaunch(List<Todo> todoList);
+        void showAllTodos();
+
+        void showFinishedTodos();
+
+        void showUnfinishedTodos();
     }
 
     interface Presenter {
@@ -37,5 +43,11 @@ public interface TodoListInterface {
         void editTodo(int userId, int id, int position, String title);
 
         void updateTodoCompleted(int userId, int id, boolean completed);
+
+        List<Todo> getAll();
+
+        List<Todo> getFinished();
+
+        List<Todo> getUnfinished();
     }
 }

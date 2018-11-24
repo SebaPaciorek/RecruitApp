@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
 
     private TodoRecyclerViewAdapter todoRecyclerViewAdapter;
     private ProgressBar progressBar;
+    private TextView emptyRecyclerViewTextView;
 
     private Button addNewTodoButton;
 
@@ -61,11 +63,13 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todo, container, false);
 
-        progressBar = view.findViewById(R.id.progressBar);
+        progressBar = MainActivity.getInstance().findViewById(R.id.progressBar);
 
         todoRecyclerView = view.findViewById(R.id.todoRecyclerView);
 
         addNewTodoButton = MainActivity.getInstance().findViewById(R.id.newTodoButton);
+
+        emptyRecyclerViewTextView = view.findViewById(R.id.emptyRecyclerViewTextView);
 
         setOnAddNewTodoButton();
 
@@ -76,19 +80,12 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
             todoPresenter.getTodos();
             todoList = todoPresenter.getTodoListFirstLaunch();
         } else {
-            todoList = todoPresenter.getTodoList();
-            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
-            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+           showAllTodos();
         }
 
         return view;
     }
 
-    @Override
-    public void showTodosFirstLaunch(List<Todo> todoList) {
-        todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
-        todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
-    }
 
     public void setLayoutManager() {
         recyclerLayoutManager = new LinearLayoutManager(getContext());
@@ -232,6 +229,66 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
     }
 
     @Override
+    public void showAllTodos() {
+        showProgressBar(true);
+
+        todoList = todoPresenter.getAll();
+        if (todoList.size() > 0) {
+            showMessageRecyclerViewEmpty(false);
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+            showMessageRecyclerViewEmpty(true);
+        }
+
+        showProgressBar(false);
+    }
+
+    @Override
+    public void showFinishedTodos() {
+        showProgressBar(true);
+
+        todoList = todoPresenter.getFinished();
+        if (todoList.size() > 0) {
+            showMessageRecyclerViewEmpty(false);
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+            showMessageRecyclerViewEmpty(true);
+        }
+
+        showProgressBar(false);
+    }
+
+    @Override
+    public void showUnfinishedTodos() {
+        showProgressBar(true);
+
+        todoList = todoPresenter.getUnfinished();
+        if (todoList.size() > 0) {
+            showMessageRecyclerViewEmpty(false);
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+            showMessageRecyclerViewEmpty(true);
+        }
+
+        showProgressBar(false);
+    }
+
+    @Override
     public void showProgressBar(boolean show) {
         if (progressBar != null) {
             if (show) {
@@ -245,6 +302,15 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
     @Override
     public void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showMessageRecyclerViewEmpty(boolean isEmpty) {
+        if (isEmpty) {
+            emptyRecyclerViewTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyRecyclerViewTextView.setVisibility(View.GONE);
+        }
     }
 
     public static TodoFragment getInstance() {

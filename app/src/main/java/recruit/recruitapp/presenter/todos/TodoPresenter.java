@@ -1,5 +1,6 @@
 package recruit.recruitapp.presenter.todos;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -77,14 +78,18 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                         }
 
                     }
-                    TodoFragment.getInstance().showTodosFirstLaunch(todoListArrayList);
                     TodoFragment.getInstance().setFirstLaunchSharedPreferences("false");
+                    TodoFragment.getInstance().showAllTodos();
+                }else {
+                    TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.title_get_todos_api_error));
+                    TodoFragment.getInstance().showMessageRecyclerViewEmpty(true);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<JsonObject>> call, Throwable t) {
-
+                TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.title_get_todos_api_error));
+                TodoFragment.getInstance().showMessageRecyclerViewEmpty(true);
             }
         });
 
@@ -101,8 +106,8 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
                 todoList = listOfTodoList.get(0);
 
-                for (int i = 0; i < todoList.getTodoRealmList().size(); i++) {
-                    todoArrayList.add(todoList.getTodoRealmList().get(i));
+                if (todoList != null){
+                    todoArrayList.addAll(todoList.getTodoRealmList());
                 }
             }
         });
@@ -160,6 +165,87 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             }
         });
         TodoFragment.getInstance().itemInserted(getTodoList().size());
+    }
+
+    @Override
+    public List<Todo> getAll() {
+        List<Todo> todoArrayList = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(@NonNull Realm realm) {
+                RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
+                if (listOfTodoList != null){
+                    todoList = listOfTodoList.get(0);
+                }
+
+                if (todoList != null){
+                    todoArrayList.addAll(todoList.getTodoRealmList());
+                }
+            }
+        });
+
+        return todoArrayList;
+    }
+
+    @Override
+    public List<Todo> getFinished() {
+        List<Todo> todoArrayList = new ArrayList<>();
+        List<Todo> todoArrayListCompleted = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
+                todoList = listOfTodoList.get(0);
+
+                if (todoList != null){
+                    todoArrayList.addAll(todoList.getTodoRealmList());
+                }
+            }
+        });
+
+        for (int i = 0; i < todoArrayList.size(); i++) {
+            if (todoArrayList.get(i).isCompleted()) {
+                todoArrayListCompleted.add(todoArrayList.get(i));
+            }
+        }
+
+        return todoArrayListCompleted;
+    }
+
+    @Override
+    public List<Todo> getUnfinished() {
+        List<Todo> todoArrayList = new ArrayList<>();
+        List<Todo> todoArrayListUncompleted = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
+                todoList = listOfTodoList.get(0);
+
+                if (todoList != null){
+                    for (int i = 0; i < todoList.getTodoRealmList().size(); i ++){
+                        todoList.getTodoRealmList().get(i).setCompleted(false);
+                    }
+                    todoArrayList.addAll(todoList.getTodoRealmList());
+                }
+            }
+        });
+
+        for (int i = 0; i < todoArrayList.size(); i++) {
+            if (!todoArrayList.get(i).isCompleted()) {
+                todoArrayListUncompleted.add(todoArrayList.get(i));
+            }else{
+                todoArrayListUncompleted.add(todoArrayList.get(i));
+            }
+        }
+
+        return todoArrayListUncompleted;
     }
 
     @Override
