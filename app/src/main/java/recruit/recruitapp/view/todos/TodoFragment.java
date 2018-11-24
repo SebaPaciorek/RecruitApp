@@ -80,7 +80,7 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
             todoPresenter.getTodos();
             todoList = todoPresenter.getTodoListFirstLaunch();
         } else {
-           showAllTodos();
+            showAllTodos();
         }
 
         return view;
@@ -273,6 +273,26 @@ public class TodoFragment extends Fragment implements TodoListInterface.View, Vi
         showProgressBar(true);
 
         todoList = todoPresenter.getUnfinished();
+        if (todoList.size() > 0) {
+            showMessageRecyclerViewEmpty(false);
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+        } else {
+            todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);
+            todoRecyclerView.setAdapter(todoRecyclerViewAdapter);
+            todoRecyclerViewAdapter.notifyDataSetChanged();
+            showMessageRecyclerViewEmpty(true);
+        }
+
+        showProgressBar(false);
+    }
+
+    @Override
+    public void showFilteredTodos(String filter) {
+        showProgressBar(true);
+
+        todoList = todoPresenter.getFiltered(filter);
         if (todoList.size() > 0) {
             showMessageRecyclerViewEmpty(false);
             todoRecyclerViewAdapter = new TodoRecyclerViewAdapter(todoList);

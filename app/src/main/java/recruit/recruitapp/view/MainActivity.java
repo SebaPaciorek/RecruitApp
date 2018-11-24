@@ -1,5 +1,7 @@
 package recruit.recruitapp.view;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 
 import recruit.recruitapp.R;
 import recruit.recruitapp.view.todos.TodoFragment;
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private TodoFragment todoFragment = new TodoFragment();
 
     private static MainActivity mainActivity;
+
+    private  SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.app_toolbar_navigation, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                TodoFragment.getInstance().showFilteredTodos(s);
+                return false;
+            }
+        };
+
+        searchView.setOnQueryTextListener(onQueryTextListener);
 
         return true;
     }

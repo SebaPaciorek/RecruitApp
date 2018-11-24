@@ -80,7 +80,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                     }
                     TodoFragment.getInstance().setFirstLaunchSharedPreferences("false");
                     TodoFragment.getInstance().showAllTodos();
-                }else {
+                } else {
                     TodoFragment.getInstance().showToast(TodoFragment.getInstance().getResources().getString(R.string.title_get_todos_api_error));
                     TodoFragment.getInstance().showMessageRecyclerViewEmpty(true);
                 }
@@ -106,7 +106,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
                 todoList = listOfTodoList.get(0);
 
-                if (todoList != null){
+                if (todoList != null) {
                     todoArrayList.addAll(todoList.getTodoRealmList());
                 }
             }
@@ -176,11 +176,11 @@ public class TodoPresenter implements TodoListInterface.Presenter {
             @Override
             public void execute(@NonNull Realm realm) {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
-                if (listOfTodoList != null){
+                if (listOfTodoList != null) {
                     todoList = listOfTodoList.get(0);
                 }
 
-                if (todoList != null){
+                if (todoList != null) {
                     todoArrayList.addAll(todoList.getTodoRealmList());
                 }
             }
@@ -201,7 +201,7 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
                 todoList = listOfTodoList.get(0);
 
-                if (todoList != null){
+                if (todoList != null) {
                     todoArrayList.addAll(todoList.getTodoRealmList());
                 }
             }
@@ -228,8 +228,8 @@ public class TodoPresenter implements TodoListInterface.Presenter {
                 RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
                 todoList = listOfTodoList.get(0);
 
-                if (todoList != null){
-                    for (int i = 0; i < todoList.getTodoRealmList().size(); i ++){
+                if (todoList != null) {
+                    for (int i = 0; i < todoList.getTodoRealmList().size(); i++) {
                         todoList.getTodoRealmList().get(i).setCompleted(false);
                     }
                     todoArrayList.addAll(todoList.getTodoRealmList());
@@ -240,12 +240,61 @@ public class TodoPresenter implements TodoListInterface.Presenter {
         for (int i = 0; i < todoArrayList.size(); i++) {
             if (!todoArrayList.get(i).isCompleted()) {
                 todoArrayListUncompleted.add(todoArrayList.get(i));
-            }else{
+            } else {
                 todoArrayListUncompleted.add(todoArrayList.get(i));
             }
         }
 
         return todoArrayListUncompleted;
+    }
+
+    @Override
+    public List<Todo> getFiltered(String filter) {
+        List<Todo> todoArrayList = new ArrayList<>();
+        List<Todo> todoArrayListFiltered = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(@NonNull Realm realm) {
+                RealmResults<TodoList> listOfTodoList = realm.where(TodoList.class).findAll();
+                if (listOfTodoList != null) {
+                    todoList = listOfTodoList.get(0);
+                }
+
+                if (todoList != null) {
+                    todoArrayList.addAll(todoList.getTodoRealmList());
+                }
+            }
+        });
+
+        for (int i = 0; i < todoArrayList.size(); i++) {
+            if (todoArrayList.get(i).getTitle().contains(filter)) {
+                todoArrayListFiltered.add(todoArrayList.get(i));
+            } else if (isInteger(filter)) {
+                if (todoArrayList.get(i).getUserId() == Integer.valueOf(filter)) {
+                    todoArrayListFiltered.add(todoArrayList.get(i));
+                }
+            }
+        }
+
+        return todoArrayListFiltered;
+    }
+
+    private boolean isInteger(String s) {
+        return isInteger(s, 10);
+    }
+
+    private boolean isInteger(String s, int radix) {
+        if (s.isEmpty()) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 && s.charAt(i) == '-') {
+                if (s.length() == 1) return false;
+                else continue;
+            }
+            if (Character.digit(s.charAt(i), radix) < 0) return false;
+        }
+        return true;
     }
 
     @Override

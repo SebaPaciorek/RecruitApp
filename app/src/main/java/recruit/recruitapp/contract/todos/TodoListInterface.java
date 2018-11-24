@@ -29,6 +29,8 @@ public interface TodoListInterface {
         void showFinishedTodos();
 
         void showUnfinishedTodos();
+
+        void showFilteredTodos(String filter);
     }
 
     interface Presenter {
@@ -49,5 +51,7 @@ public interface TodoListInterface {
         List<Todo> getFinished();
 
         List<Todo> getUnfinished();
+
+        List<Todo> getFiltered(String filter);
     }
 }
